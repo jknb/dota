@@ -1,0 +1,108 @@
+var heroes;
+window.onload = async function() {
+    const resp = await fetchHeroes();
+    heroes = resp.data.heroes;
+    init();
+}
+
+
+const init = () => {
+    heroes.forEach(createHeroElement);
+};
+
+// HEROES
+let selectedHero;
+
+const heroesCard = document.querySelector('.heroes-card');
+
+// const heroes = [
+//     {
+//         name: 'Antimage',
+//         role: 'carry',
+//         damage: 29,
+//     },
+//     {
+//         name: 'Juggernaut',
+//         role: 'carry',
+//         damage: 24,
+//     },
+// ];
+
+const fetchHeroes = () => fetch("http://10.0.240.57")
+                            .then(res => res.json());
+
+const heroesList = document.getElementById("heroes-list");
+const title = document.querySelector("h1");
+
+const onHeroClick = (hero) => {
+    selectedHero = hero;
+    title.textContent = `Hello, ${selectedHero.name}!`;
+    if (selectedItem != null) {
+        showTotalDamage();
+    }
+};
+
+const createHeroElement = (hero) => {
+    const li = document.createElement("li");
+    li.textContent = hero.name;
+    li.onclick = () => onHeroClick(hero);
+    // li.addEventListener('click', onHeroClick);
+    li.className = "hero";
+    heroesList.appendChild(li);
+};
+
+
+
+// ITEMS
+let selectedItem;
+
+const itemsCard = document.querySelector('.items-card');
+
+const items = [ 
+    {
+        name: 'Battlefury',
+        cost: 4200,
+        damage: 45,
+    },
+    {
+        name: 'Yasha',
+        cost: 1950,
+        damage: 16,
+    },
+];
+
+const itemsList = document.querySelector('#items-list');
+const itemHeading = document.querySelector('#selected-items');
+
+items.forEach(function(item) {
+    const li = document.createElement('li');
+    
+    li.setAttribute('style', 'white-space: pre');
+    
+    li.textContent = `${item.name} \r\n`;
+    li.textContent += `Cost: ${item.cost}`;
+
+    li.onclick = () => {
+        selectedItem = item;
+        itemHeading.textContent = `You have chosen ${selectedItem.name}`;
+        if (selectedHero != null) {
+            showTotalDamage();
+        }
+    };
+    li.className = 'item';
+    itemsList.appendChild(li);
+});
+
+
+
+// Show total damage (hero + item)
+function showTotalDamage() {
+    const heroDamage = selectedHero.damage;
+    const itemDamage = selectedItem.damage;
+    let totalDamage = heroDamage + itemDamage;
+    
+    const damageHeading = document.querySelector('#damage');
+
+    damageHeading.textContent = `${selectedHero.name}'s total damage with ${selectedItem.name} is: ${totalDamage}`;
+
+}
