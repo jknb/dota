@@ -1,45 +1,109 @@
-var heroes;
-window.onload = async function() {
-    const resp = await fetchHeroes();
-    heroes = resp.data.heroes;
-    init();
-}
+// var heroes;
+// window.onload = async function() {
+//     const resp = await fetchHeroes();
+//     heroes = resp.data.heroes;
+//     init();
+// }
 
 
-const init = () => {
-    heroes.forEach(createHeroElement);
-};
+// const init = () => {
+//     heroes.forEach(createHeroElement);
+// };
 
 // HEROES
 let selectedHero;
 
 const heroesCard = document.querySelector('.heroes-card');
 
-// const heroes = [
-//     {
-//         name: 'Antimage',
-//         role: 'carry',
-//         damage: 29,
-//     },
-//     {
-//         name: 'Juggernaut',
-//         role: 'carry',
-//         damage: 24,
-//     },
-// ];
+const heroes = [
+    {
+        name: 'Antimage',
+        role: 'carry',
+        damage: 29,
+        skills: {
+            first: {
+                name: 'Mana Break',
+                manacost: 0,
+            },
+            second: {
+                name: 'Blink',
+                manacost: 60,
+            },
+            third: {
+                name: 'Spell Shield',
+                manacost: 0,
+            },
+            ultimate: {
+                name: 'Mana Void',
+                manacost: 275,
+            }
+        },
+    },
+    {
+        name: 'Juggernaut',
+        role: 'carry',
+        damage: 24,
+        skills: {
+            first: {
+                name: 'Bladefury',
+                manacost: 90,
+            },
+            second: {
+                name: 'Healing Ward',
+                manacost: 140,
+            },
+            third: {
+                name: 'Blade Dance',
+                manacost: 0,
+            },
+            ultimate: {
+                name: 'Omnislash',
+                manacost: 350,
+            }
+        },
+    },
+];
 
-const fetchHeroes = () => fetch("http://10.0.240.57")
-                            .then(res => res.json());
+// const fetchHeroes = () => fetch("http://10.0.240.57")
+//                             .then(res => res.json());
 
 const heroesList = document.getElementById("heroes-list");
 const title = document.querySelector("h1");
+const heroSkills = document.querySelector('#hero-skills');
 
 const onHeroClick = (hero) => {
     selectedHero = hero;
     title.textContent = `Hello, ${selectedHero.name}!`;
+    
+    heroSkills.innerHTML = `${selectedHero.name}'s skills are: ${showHeroSkills(selectedHero)}`;
+
     if (selectedItem != null) {
         showTotalDamage();
     }
+};
+
+// Show hero skills
+const showHeroSkills = (hero) => {
+    const ul = document.createElement('ul');
+    const firstLi = document.createElement('li');
+    const secondLi = document.createElement('li');
+    const thirdLi = document.createElement('li');
+    const ultimateLi = document.createElement('li');
+
+    firstLi.textContent = hero.skills.first.name;
+    secondLi.textContent = hero.skills.second.name;
+    thirdLi.textContent = hero.skills.third.name;
+    ultimateLi.textContent = hero.skills.ultimate.name;
+
+    ul.appendChild(firstLi);
+    ul.appendChild(secondLi);
+    ul.appendChild(thirdLi);
+    ul.appendChild(ultimateLi);
+    document.querySelector('#hero-skills').appendChild(ul);
+
+    console.log(hero.skills.first.name);
+    console.log(ul);
+     
 };
 
 const createHeroElement = (hero) => {
@@ -51,6 +115,7 @@ const createHeroElement = (hero) => {
     heroesList.appendChild(li);
 };
 
+heroes.forEach(createHeroElement);
 
 
 // ITEMS
